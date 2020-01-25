@@ -1,0 +1,23 @@
+{
+  "name": "fmw-utils",
+  "version": "0.1.0",
+  "description": "utilities for fm widgets",
+  "main": "src/index.js",
+  "module": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/geistinteractive/fmw-utils.git"
+  },
+  "author": "todd@geistinteractive.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/geistinteractive/fmw-utils/issues"
+  },
+  "homepage": "https://github.com/geistinteractive/fmw-utils#readme",
+  "dependencies": {
+    "uuidv1": "^1.6.14"
+  }
+}
