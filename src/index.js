@@ -59,12 +59,13 @@ window.Fmw_Callback = (results, fetchId) => {
 
 /**
  *
- * @param {string} Script the name of the script to call
- * @param {object} Data the data to pass
- * @param {string} [EventType] an optional top level key
+ * @param {string} script the name of the script to call
+ * @param {object} data the data to pass
+ * @param {object} options
+ * @param {integer} [options.timeOut=30000] timeout default is 30000 ms
  * @returns {Promise}
  */
-export function fmFetch(script, data = {}, options = {}) {
+export function fmFetch(script, data = {}, options = { timeOut: 30000 }) {
   const fetchId = uuidv1();
   __FETCH_RESULTS__[fetchId] = "started";
 
@@ -99,6 +100,6 @@ export function fmFetch(script, data = {}, options = {}) {
     let timeOut = false;
     setTimeout(() => {
       timeOut = true;
-    }, 5000);
+    }, options.timeOut);
   });
 }
