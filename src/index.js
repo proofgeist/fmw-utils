@@ -1,5 +1,7 @@
 import uuidv1 from "uuid/v1";
 
+const CALLBACK = "Fmw_Callback";
+
 /**
  * boot the application with the initialProps. This allows the use of either a merge
  * or function call from FM to kick of an application
@@ -27,7 +29,19 @@ export function init(booter, optionalDefaultProps = null) {
       window.__initialProps__ = JSON.parse(window.__initialProps__);
     } catch (error) {}
 
-    booter(window.__initialProps__);
+    // we may need to wait for FileMaker
+    let checkFMInterval = setInterval(() => {
+      if (window.FileMaker) {
+        clearInterval(checkFMInterval);
+        booter(window.__initialProps__);
+      }
+    }, 100);
+
+    // if it never loads then timeour
+    setTimeout(() => {
+      console.error("app boot failed due to timeout");
+      clearInterval(checkFMInterval);
+    }, 10000);
   } else {
     //
     //
@@ -47,7 +61,7 @@ export function init(booter, optionalDefaultProps = null) {
  * fetch result queue mapper thing
  */
 const __FETCH_RESULTS__ = {};
-window.Fmw_Callback = (results, fetchId) => {
+window[CALLBACK] = (results, fetchId) => {
   let x = __FETCH_RESULTS__[fetchId];
   if (x === "started") {
     try {
@@ -59,11 +73,14 @@ window.Fmw_Callback = (results, fetchId) => {
 
 /**
  *
+ * Run a script in FileMaker and return a promise for the result
+ *
  * @param {string} script the name of the script to call
- * @param {object} data the data to pass
- * @param {object} options
- * @param {integer} [options.timeOut=30000] timeout default is 30000 ms
- * @returns {Promise}
+ * @param {Object} data the data to pass
+ * @param {Object} options
+ * @param {Number} [options.timeOut=30000] timeout default is 30000 ms
+ * @param {String} [options.eventType=null] an optional top level key to specific different types of events
+ * @returns {Promise} a promise
  */
 export function fmFetch(script, data = {}, options = { timeOut: 30000 }) {
   const fetchId = uuidv1();
@@ -72,11 +89,11 @@ export function fmFetch(script, data = {}, options = { timeOut: 30000 }) {
   const { Config, InstanceId } = window.fmw.getInitialProps();
   const param = {
     data,
-    Config,
-    InstanceId,
-    FetchId: fetchId,
-    Callback: "Fmw_Callback"
+    meta: { Config, InstanceId, FetchId: fetchId, Callback: CALLBACK }
   };
+  if (options.eventType) {
+    param.eventType = options.eventType;
+  }
 
   window.FileMaker.PerformScript(script, JSON.stringify(param));
 
@@ -102,4 +119,26 @@ export function fmFetch(script, data = {}, options = { timeOut: 30000 }) {
       timeOut = true;
     }, options.timeOut);
   });
+}
+/**
+ *
+ * Run a script in FileMaker
+ *
+ * @param {string} script the name of the script to call
+ * @param {Object} data the data to pass
+ * @param {Object} options
+ * @param {String} [options.eventType=null] an optional top level key to specific different types of events
+ */
+
+export function fmCallScript(script, data = {}, options = {}) {
+  const { Config, InstanceId } = window.fmw.getInitialProps();
+  const param = {
+    data,
+    meta: { Config, InstanceId }
+  };
+  if (options.eventType) {
+    param.eventType = options.eventType;
+  }
+
+  window.FileMaker.PerformScript(script, JSON.stringify(param));
 }
