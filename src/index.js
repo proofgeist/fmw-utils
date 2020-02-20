@@ -9,11 +9,16 @@ const CALLBACK = "Fmw_Callback";
  * @param {*} optionalDefaultProps
  */
 export function init(booter, optionalDefaultProps = null) {
+  //deprecated
   if (window.fmw) {
     window.fmw = {};
   }
   window.fmw = {
     getInitialProps: function() {
+      console.info(
+        "deprecating fmw.getIniialProps. Export getInitialProps from 'fmw-utils'"
+      );
+
       return window.__initialProps__;
     }
   };
@@ -141,4 +146,8 @@ export function fmCallScript(script, data = {}, options = {}) {
   }
 
   window.FileMaker.PerformScript(script, JSON.stringify(param));
+}
+
+export function getInitialProps() {
+  return window.__initialProps__;
 }
