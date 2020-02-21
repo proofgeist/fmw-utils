@@ -138,13 +138,13 @@ export function fmFetch(script, data = {}, options = { timeOut: 30000 }) {
  */
 
 export function fmCallScript(script, data = {}, options = {}) {
-  const { Config, InstanceId } = window.fmw.getInitialProps();
+  const { Config, AddonUUID } = getInitialProps();
   const param = {
-    data,
-    meta: { Config, InstanceId }
+    Data: data,
+    Meta: { Config, AddonUUID }
   };
   if (options.eventType) {
-    param.eventType = options.eventType;
+    param.Meta.EventType = options.eventType;
   }
 
   window.FileMaker.PerformScript(script, JSON.stringify(param));
