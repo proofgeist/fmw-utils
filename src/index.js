@@ -91,13 +91,12 @@ export function fmFetch(script, data = {}, options = { timeOut: 30000 }) {
   const fetchId = uuidv1();
   __FETCH_RESULTS__[fetchId] = "started";
 
-  const { Config, InstanceId } = window.fmw.getInitialProps();
   const param = {
-    data,
-    meta: { Config, InstanceId, FetchId: fetchId, Callback: CALLBACK }
+    Data,
+    Meta: { Config, AddonUUID, FetchId: fetchId, Callback: CALLBACK }
   };
   if (options.eventType) {
-    param.eventType = options.eventType;
+    param.Meta.EventType = options.eventType;
   }
 
   window.FileMaker.PerformScript(script, JSON.stringify(param));
