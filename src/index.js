@@ -171,7 +171,8 @@ export function getAddonUUID() {
 export const getConfig = key => {
   const props = getInitialProps();
   const config = props.Config;
-  return config[key].value;
+  if (config[key]) return config[key].value;
+  throw new Error(`there is no config with the key: ${key}`);
 };
 
 /**
@@ -181,6 +182,8 @@ export const getConfig = key => {
  */
 export const getFMFieldName = key => {
   const fieldValue = getConfig(key);
+  if (!fieldValue.includes("::"))
+    throw new Error(`the key "${key}" doesn't appear to refer to a FM Field`);
   const split = fieldValue.split("::");
   return split[1];
 };
@@ -192,6 +195,8 @@ export const getFMFieldName = key => {
  */
 export const getFMTableName = key => {
   const fieldValue = getConfig(key);
+  if (!fieldValue.includes("::"))
+    throw new Error(`the key "${key}" doesn't appear to refer to a FM Field`);
   const split = fieldValue.split("::");
   return split[0];
 };
