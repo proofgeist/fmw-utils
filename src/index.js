@@ -91,7 +91,7 @@ export function fmFetch(script, data = {}, options = { timeOut: 30000 }) {
   const fetchId = uuidv1();
   __FETCH_RESULTS__[fetchId] = "started";
 
-  const Config = getConfig();
+  const Config = getConfigs();
   const AddonUUID = getAddonUUID();
 
   const param = {
@@ -163,14 +163,17 @@ export function getAddonUUID() {
   return props.AddonUUID;
 }
 
+export const getConfigs = () => {
+  const props = getInitialProps();
+  return props.Config;
+};
 /**
  *
  * @param {string} key the ket of the Config to get
  * @returns {string}
  */
 export const getConfig = key => {
-  const props = getInitialProps();
-  const config = props.Config;
+  const config = getConfigs();
   if (config[key]) return config[key].value;
   throw new Error(`there is no config with the key: ${key}`);
 };
