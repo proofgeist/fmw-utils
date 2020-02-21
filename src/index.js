@@ -92,7 +92,7 @@ export function fmFetch(script, data = {}, options = { timeOut: 30000 }) {
   __FETCH_RESULTS__[fetchId] = "started";
 
   const param = {
-    Data,
+    Data: data,
     Meta: { Config, AddonUUID, FetchId: fetchId, Callback: CALLBACK }
   };
   if (options.eventType) {
@@ -177,7 +177,7 @@ export const getConfig = key => {
  * @returns {string}
  */
 export const getFMFieldName = key => {
-  const fieldValue = getIntialProp(key);
+  const fieldValue = getConfig(key);
   const split = fieldValue.split("::");
   return split[1];
 };
@@ -188,7 +188,7 @@ export const getFMFieldName = key => {
  * @returns {string}
  */
 export const getFMTableName = key => {
-  const fieldValue = getIntialProp(key);
+  const fieldValue = getConfig(key);
   const split = fieldValue.split("::");
   return split[0];
 };
