@@ -91,6 +91,9 @@ export function fmFetch(script, data = {}, options = { timeOut: 30000 }) {
   const fetchId = uuidv1();
   __FETCH_RESULTS__[fetchId] = "started";
 
+  const Config = getConfig();
+  const AddonUUID = getAddonUUID();
+
   const param = {
     Data: data,
     Meta: { Config, AddonUUID, FetchId: fetchId, Callback: CALLBACK }
