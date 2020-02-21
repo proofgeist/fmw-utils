@@ -151,3 +151,45 @@ export function fmCallScript(script, data = {}, options = {}) {
 export function getInitialProps() {
   return window.__initialProps__;
 }
+
+/**
+ * get the AddonUUID
+ * @returns {string}
+ */
+export function getAddonUUID() {
+  const props = getInitialProps();
+  return props.AddonUUID;
+}
+
+/**
+ *
+ * @param {string} key the ket of the Config to get
+ * @returns {string}
+ */
+export const getConfig = key => {
+  const props = getInitialProps();
+  const config = props.Config;
+  return config[key].value;
+};
+
+/**
+ * if the config key is a FM field get just it's name
+ * @param {string} key
+ * @returns {string}
+ */
+export const getFMFieldName = key => {
+  const fieldValue = getIntialProp(key);
+  const split = fieldValue.split("::");
+  return split[1];
+};
+/**
+ *
+ * if the config key is a FM field get just it's table
+ * @param {string} key
+ * @returns {string}
+ */
+export const getFMTableName = key => {
+  const fieldValue = getIntialProp(key);
+  const split = fieldValue.split("::");
+  return split[0];
+};
