@@ -1,4 +1,6 @@
 import uuidv1 from "uuid/v1";
+import errors from "./fm-errors";
+export const fmErrors = errors;
 
 const CALLBACK = "Fmw_Callback";
 
