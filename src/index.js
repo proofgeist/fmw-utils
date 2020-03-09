@@ -1,6 +1,6 @@
 import uuidv1 from "uuid/v1";
-import errors from './fm-errors'
-export const fmErrors = errors
+import errors from "./fm-errors";
+export const fmErrors = errors;
 
 const CALLBACK = "Fmw_Callback";
 
@@ -187,6 +187,7 @@ export const getConfig = key => {
  */
 export const getFMFieldName = key => {
   const fieldValue = getConfig(key);
+  if (!fieldValue) return null;
   if (!fieldValue.includes("::"))
     throw new Error(`the key "${key}" doesn't appear to refer to a FM Field`);
   const split = fieldValue.split("::");
@@ -200,6 +201,7 @@ export const getFMFieldName = key => {
  */
 export const getFMTableName = key => {
   const fieldValue = getConfig(key);
+  if (!fieldValue) return null;
   if (!fieldValue.includes("::"))
     throw new Error(`the key "${key}" doesn't appear to refer to a FM Field`);
   const split = fieldValue.split("::");
