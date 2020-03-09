@@ -1,6 +1,6 @@
 {
   "name": "fmw-utils",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "utilities for fm widgets",
   "main": "src/index.js",
   "module": "src/index.js",
