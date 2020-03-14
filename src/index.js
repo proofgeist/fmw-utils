@@ -11,19 +11,7 @@ const CALLBACK = "Fmw_Callback";
  * @param {*} optionalDefaultProps
  */
 export function init(booter, optionalDefaultProps = null) {
-  //deprecated
-  if (window.fmw) {
-    window.fmw = {};
-  }
-  window.fmw = {
-    getInitialProps: function() {
-      console.info(
-        "deprecating fmw.getIniialProps. Export getInitialProps from 'fmw-utils'"
-      );
-
-      return window.__initialProps__;
-    }
-  };
+  window.__initialProps__ = "__PROPS__";
 
   //
   // if we pass in optional defaults use them
@@ -46,7 +34,7 @@ export function init(booter, optionalDefaultProps = null) {
 
     // if it never loads then timeour
     setTimeout(() => {
-      console.error("app boot failed due to timeout");
+      console.error("Addon boot failed due to timeout");
       clearInterval(checkFMInterval);
     }, 10000);
   } else {
