@@ -31,12 +31,6 @@ export function init(booter, optionalDefaultProps = null) {
         booter(window.__initialProps__);
       }
     }, 100);
-
-    // if it never loads then timeour
-    setTimeout(() => {
-      console.error("Addon boot failed due to timeout");
-      clearInterval(checkFMInterval);
-    }, 10000);
   } else {
     //
     //
