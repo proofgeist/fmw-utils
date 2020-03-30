@@ -9,6 +9,7 @@ const CALLBACK = "Fmw_Callback";
  * or function call from FM to kick of an application
  * @param {function} booter the function that will render the application.
  * @param {*} optionalDefaultProps
+ * @param {boolean} webDirectRefresh
  */
 export function init(
   booter,
