@@ -10,7 +10,11 @@ const CALLBACK = "Fmw_Callback";
  * @param {function} booter the function that will render the application.
  * @param {*} optionalDefaultProps
  */
-export function init(booter, optionalDefaultProps = null) {
+export function init(
+  booter,
+  optionalDefaultProps = null,
+  webDirectRefresh = "false"
+) {
   window.__initialProps__ = "__PROPS__";
 
   //
@@ -23,7 +27,7 @@ export function init(booter, optionalDefaultProps = null) {
     try {
       window.__initialProps__ = JSON.parse(window.__initialProps__);
     } catch (error) {}
-
+    window.__initialProps__.webDirectRefresh = webDirectRefresh;
     // we may need to wait for FileMaker
     let checkFMInterval = setInterval(() => {
       if (window.FileMaker) {
@@ -40,6 +44,7 @@ export function init(booter, optionalDefaultProps = null) {
         props = JSON.parse(props);
       } catch (error) {}
       // boot the widget with those props
+      props.webDirectRefresh = webDirectRefresh;
       window.__initialProps__ = props;
       booter(props);
     };
