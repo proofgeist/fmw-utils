@@ -1,6 +1,6 @@
 {
   "name": "fmw-utils",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "description": "utilities for fm widgets",
   "main": "dist/fmw-utils.cjs.js",
   "module": "dist/fmw-utils.esm.js",
