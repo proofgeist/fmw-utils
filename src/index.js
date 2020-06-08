@@ -5,8 +5,8 @@ export const fmErrors = errors;
 const CALLBACK = "Fmw_Callback";
 
 /**
- * boot the application with the initialProps. This allows the use of either a merge
- * or function call from FM to kick of an application
+ * Waits for FileMaker Object to load and then boots the application with the initialProps.
+ * This allows the use of either a merge or function call from FM to kick of an application
  * @param {function} booter the function that will render the application.
  * @param {*} optionalDefaultProps
  * @param {boolean} webDirectRefresh
@@ -40,7 +40,7 @@ export function init(
     //
     //
     // we haven't merged so install loadInitialProps method for FM to use
-    window.loadInitialProps = function(props) {
+    window.loadInitialProps = function (props) {
       try {
         props = JSON.parse(props);
       } catch (error) {}
@@ -54,6 +54,7 @@ export function init(
 
 /**
  * fetch result queue mapper thing
+ * @private
  */
 const __FETCH_RESULTS__ = {};
 window[CALLBACK] = (results, fetchId) => {
@@ -140,6 +141,10 @@ export function fmCallScript(script, data = {}, options = {}) {
   window.FileMaker.PerformScript(script, JSON.stringify(param));
 }
 
+/**
+ * returns the entire initial Props object merged into the payload
+ * or loaded via function call
+ */
 export function getInitialProps() {
   return window.__initialProps__;
 }
@@ -153,6 +158,9 @@ export function getAddonUUID() {
   return props.AddonUUID;
 }
 
+/**
+ * returns the Config part of the intialProps
+ */
 export const getConfigs = () => {
   const props = getInitialProps();
   return props.Config;
@@ -162,36 +170,36 @@ export const getConfigs = () => {
  * @param {string} key the ket of the Config to get
  * @returns {string}
  */
-export const getConfig = key => {
+export function getConfig(key) {
   const config = getConfigs();
   if (config[key]) return config[key].value;
   throw new Error(`there is no config with the key: ${key}`);
-};
+}
 
 /**
  * if the config key is a FM field get just it's name
  * @param {string} key
  * @returns {string}
  */
-export const getFMFieldName = key => {
+export function getFMFieldName(key) {
   const fieldValue = getConfig(key);
   if (!fieldValue) return null;
   if (!fieldValue.includes("::"))
     throw new Error(`the key "${key}" doesn't appear to refer to a FM Field`);
   const split = fieldValue.split("::");
   return split[1];
-};
+}
 /**
  *
  * if the config key is a FM field get just it's table
  * @param {string} key
  * @returns {string}
  */
-export const getFMTableName = key => {
+export function getFMTableName(key) {
   const fieldValue = getConfig(key);
   if (!fieldValue) return null;
   if (!fieldValue.includes("::"))
     throw new Error(`the key "${key}" doesn't appear to refer to a FM Field`);
   const split = fieldValue.split("::");
   return split[0];
-};
+}
