@@ -1,15 +1,27 @@
+## Constants
+
+<dl>
+<dt><a href="#getConfigs">getConfigs</a></dt>
+<dd><p>returns the Config part of the intialProps</p>
+</dd>
+</dl>
+
 ## Functions
 
 <dl>
 <dt><a href="#init">init(booter, optionalDefaultProps, webDirectRefresh)</a></dt>
-<dd><p>boot the application with the initialProps. This allows the use of either a merge
-or function call from FM to kick of an application</p>
+<dd><p>Waits for FileMaker Object to load and then boots the application with the initialProps.
+This allows the use of either a merge or function call from FM to kick of an application</p>
 </dd>
 <dt><a href="#fmFetch">fmFetch(script, data, options)</a> ⇒ <code>Promise</code></dt>
 <dd><p>Run a script in FileMaker and return a promise for the result</p>
 </dd>
 <dt><a href="#fmCallScript">fmCallScript(script, data, options)</a></dt>
 <dd><p>Run a script in FileMaker</p>
+</dd>
+<dt><a href="#getInitialProps">getInitialProps()</a></dt>
+<dd><p>returns the entire initial Props object merged into the payload
+or loaded via function call</p>
 </dd>
 <dt><a href="#getAddonUUID">getAddonUUID()</a> ⇒ <code>string</code></dt>
 <dd><p>get the AddonUUID</p>
@@ -24,11 +36,17 @@ or function call from FM to kick of an application</p>
 </dd>
 </dl>
 
+<a name="getConfigs"></a>
+
+## getConfigs
+returns the Config part of the intialProps
+
+**Kind**: global constant  
 <a name="init"></a>
 
 ## init(booter, optionalDefaultProps, webDirectRefresh)
-boot the application with the initialProps. This allows the use of either a merge
-or function call from FM to kick of an application
+Waits for FileMaker Object to load and then boots the application with the initialProps.
+This allows the use of either a merge or function call from FM to kick of an application
 
 **Kind**: global function  
 
@@ -68,6 +86,13 @@ Run a script in FileMaker
 | options | <code>Object</code> |  |  |
 | [options.eventType] | <code>String</code> | <code></code> | an optional top level key to specific different types of events |
 
+<a name="getInitialProps"></a>
+
+## getInitialProps()
+returns the entire initial Props object merged into the payload
+or loaded via function call
+
+**Kind**: global function  
 <a name="getAddonUUID"></a>
 
 ## getAddonUUID() ⇒ <code>string</code>
