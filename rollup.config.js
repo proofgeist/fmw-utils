@@ -7,14 +7,11 @@ export default [
   {
     input: "src/index.js",
     output: {
-      name: "fmw-utils",
+      name: "fmwUtils",
       file: pkg.browser,
       format: "umd"
     },
-    plugins: [
-      resolve(), // so Rollup can find `ms`
-      commonjs() // so Rollup can convert `ms` to an ES module
-    ]
+    plugins: [resolve(), commonjs()]
   },
 
   // CommonJS (for Node) and ES module (for bundlers) build.

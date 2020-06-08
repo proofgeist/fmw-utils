@@ -11,13 +11,15 @@ You can load it directly from the unpkg cdn
 <script src="https://unpkg.com/fmw-utils" crossorigin></script>
 ```
 
+once loaded you can find the methods on the `fmwUtils` global object
+
 or if you are using a bundler like webpack, you can install from npm
 
 `npm install fmw-utils`
 
 and then import
 
-`import {fmFetch} from 'fm-utils`
+`import {fmFetch} from 'fmw-utils`
 
 ## Highlights
 

@@ -1,7 +1,7 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('uuid/v1')) :
   typeof define === 'function' && define.amd ? define(['exports', 'uuid/v1'], factory) :
-  (global = global || self, factory(global['fmw-utils'] = {}, global.uuidv1));
+  (global = global || self, factory(global.fmwUtils = {}, global.uuidv1));
 }(this, (function (exports, uuidv1) { 'use strict';
 
   uuidv1 = uuidv1 && Object.prototype.hasOwnProperty.call(uuidv1, 'default') ? uuidv1['default'] : uuidv1;
@@ -298,8 +298,8 @@
   const CALLBACK = "Fmw_Callback";
 
   /**
-   * boot the application with the initialProps. This allows the use of either a merge
-   * or function call from FM to kick of an application
+   * Waits for FileMaker Object to load and then boots the application with the initialProps.
+   * This allows the use of either a merge or function call from FM to kick of an application
    * @param {function} booter the function that will render the application.
    * @param {*} optionalDefaultProps
    * @param {boolean} webDirectRefresh
@@ -333,7 +333,7 @@
       //
       //
       // we haven't merged so install loadInitialProps method for FM to use
-      window.loadInitialProps = function(props) {
+      window.loadInitialProps = function (props) {
         try {
           props = JSON.parse(props);
         } catch (error) {}
@@ -347,6 +347,7 @@
 
   /**
    * fetch result queue mapper thing
+   * @private
    */
   const __FETCH_RESULTS__ = {};
   window[CALLBACK] = (results, fetchId) => {
@@ -433,6 +434,10 @@
     window.FileMaker.PerformScript(script, JSON.stringify(param));
   }
 
+  /**
+   * returns the entire initial Props object merged into the payload
+   * or loaded via function call
+   */
   function getInitialProps() {
     return window.__initialProps__;
   }
@@ -446,6 +451,9 @@
     return props.AddonUUID;
   }
 
+  /**
+   * returns the Config part of the intialProps
+   */
   const getConfigs = () => {
     const props = getInitialProps();
     return props.Config;
@@ -455,39 +463,39 @@
    * @param {string} key the ket of the Config to get
    * @returns {string}
    */
-  const getConfig = key => {
+  function getConfig(key) {
     const config = getConfigs();
     if (config[key]) return config[key].value;
     throw new Error(`there is no config with the key: ${key}`);
-  };
+  }
 
   /**
    * if the config key is a FM field get just it's name
    * @param {string} key
    * @returns {string}
    */
-  const getFMFieldName = key => {
+  function getFMFieldName(key) {
     const fieldValue = getConfig(key);
     if (!fieldValue) return null;
     if (!fieldValue.includes("::"))
       throw new Error(`the key "${key}" doesn't appear to refer to a FM Field`);
     const split = fieldValue.split("::");
     return split[1];
-  };
+  }
   /**
    *
    * if the config key is a FM field get just it's table
    * @param {string} key
    * @returns {string}
    */
-  const getFMTableName = key => {
+  function getFMTableName(key) {
     const fieldValue = getConfig(key);
     if (!fieldValue) return null;
     if (!fieldValue.includes("::"))
       throw new Error(`the key "${key}" doesn't appear to refer to a FM Field`);
     const split = fieldValue.split("::");
     return split[0];
-  };
+  }
 
   exports.fmCallScript = fmCallScript;
   exports.fmErrors = fmErrors;
