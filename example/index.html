@@ -1,28 +1,44 @@
 <html>
   <script src="../dist/fmw-utils.umd.js" crossorigin></script>
+
   <script>
     // __PROPS__ this is a merge target. Use to merge in intial properties when using data urls
     window.__initialProps__ = "__PROPS__";
   </script>
+
+  <link
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+    crossorigin="anonymous"
+  />
   <body>
     <h1>fmFetch Example</h1>
-    <h2>Field Data Fetched from FileMaker</h2>
+    <h3>Field Data Fetched from FileMaker</h3>
     <div id="fieldId"></div>
     <br />
-    <h1>Layout Names Fetched From FileMaker</h1>
+    <h3>Layout Names Fetched From FileMaker</h3>
     <ul id="layouts"></ul>
+    <button onclick="getDataFromFM()" type="button" class="btn btn-primary">
+      Fetch Data
+    </button>
   </body>
   <script>
     const { fmFetch, init } = fmwUtils;
 
     function startApp(props) {
+      //do any setup you need here
+    }
+
+    function getDataFromFM() {
       // Runs GetSimpleResult Script in FileMaker
       fmFetch("GetSimpleResult").then(r => {
         // now we have the result returned from the script
 
         let fieldId = document.getElementById("fieldId");
-        fieldId.innerHTML = r.Id;
+        fieldId.innerHTML = r.FirstName;
         let layoutUl = document.getElementById("layouts");
+        layoutUl.innerHTML = ""; //wipe it if it has already happened
         let layouts = r.LayoutNames;
         layouts.map(l => {
           let li = document.createElement("li");
