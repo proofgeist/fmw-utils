@@ -1,3 +1,3 @@
 # fmw-utils
 
-bag full of useful things for stuff
+can be used in a browser or imported or required
