@@ -1,5 +1,6 @@
 import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
+import needsPolyFills from "rollup-plugin-node-polyfills";
 import pkg from "./package.json";
 
 export default [
@@ -7,11 +8,19 @@ export default [
   {
     input: "src/index.js",
     output: {
+      globals: { nanoid: "nanoid", crypto: "crypto" },
       name: "fmwUtils",
       file: pkg.browser,
       format: "umd"
     },
-    plugins: [resolve(), commonjs()]
+    plugins: [
+      needsPolyFills({ crypto: true }),
+      resolve({
+        // pass custom options to the resolve plugin
+        browser: true
+      }),
+      commonjs()
+    ]
   },
 
   // CommonJS (for Node) and ES module (for bundlers) build.
@@ -22,7 +31,7 @@ export default [
   // `file` and `format` for each target)
   {
     input: "src/index.js",
-    external: ["ms"],
+    external: ["uuid", "crypto"],
     output: [
       { file: pkg.main, format: "cjs" },
       { file: pkg.module, format: "es" }

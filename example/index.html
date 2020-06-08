@@ -1,6 +1,43 @@
 <html>
   <script src="../dist/fmw-utils.umd.js" crossorigin></script>
+  <script>
+    // __PROPS__ this is a merge target. Use to merge in intial properties when using data urls
+    window.__initialProps__ = "__PROPS__";
+  </script>
   <body>
-    load some stuff from FM
+    <h1>fmFetch Example</h1>
+    <h2>Field Data Fetched from FileMaker</h2>
+    <div id="fieldId"></div>
+    <br />
+    <h1>Layout Names Fetched From FileMaker</h1>
+    <ul id="layouts"></ul>
   </body>
+  <script>
+    const { fmFetch, init } = fmwUtils;
+
+    function startApp(props) {
+      // Runs GetSimpleResult Script in FileMaker
+      fmFetch("GetSimpleResult").then(r => {
+        // now we have the result returned from the script
+
+        let fieldId = document.getElementById("fieldId");
+        fieldId.innerHTML = r.Id;
+        let layoutUl = document.getElementById("layouts");
+        let layouts = r.LayoutNames;
+        layouts.map(l => {
+          let li = document.createElement("li");
+          li.innerText = l;
+          layoutUl.appendChild(li);
+        });
+      });
+    }
+
+    //calling with no second param will wait for props to be loaded from FM
+    //init(boot);
+    //or
+    //if you call it with props in the second param it will just boot immediately
+    init(startApp, { name: "value" });
+    // since for this simple example we aren't passing in any props from FM
+    // we'll just pass in any old object.  We could use {}
+  </script>
 </html>

@@ -2,9 +2,7 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
-
-var uuidv1 = _interopDefault(require('uuid/v1'));
+var uuid = require('uuid');
 
 var errors = {
   "1": "User canceled action",
@@ -313,7 +311,14 @@ function init(
 
   //
   // if we pass in optional defaults use them
-  if (optionalDefaultProps) return booter(optionalDefaultProps);
+  if (optionalDefaultProps) {
+    let checkFMInterval = setInterval(() => {
+      if (window.FileMaker) {
+        clearInterval(checkFMInterval);
+        return booter(optionalDefaultProps);
+      }
+    }, 100);
+  }
 
   //
   // if we have merged in initialProps use them to boot the widget
@@ -331,12 +336,14 @@ function init(
     }, 100);
   } else {
     //
-    //
+
     // we haven't merged so install loadInitialProps method for FM to use
     window.loadInitialProps = function (props) {
       try {
         props = JSON.parse(props);
-      } catch (error) {}
+      } catch (error) {
+        props = {};
+      }
       // boot the widget with those props
       props.webDirectRefresh = webDirectRefresh;
       window.__initialProps__ = props;
@@ -367,12 +374,14 @@ window[CALLBACK] = (results, fetchId) => {
  * @param {string} script the name of the script to call
  * @param {Object} data the data to pass
  * @param {Object} options
+ * @param {Object} [options.Meta] this Optional object is passed to the FileMaker Script in the Meta property.
+ * @param {string} [options.Meta.AddonUUID] this is used by some FileMaker Scripts to help target the correct Web Veiwer to call back to
  * @param {Number} [options.timeOut=30000] timeout default is 30000 ms
  * @param {String} [options.eventType=null] an optional top level key to specific different types of events
  * @returns {Promise} a promise
  */
 function fmFetch(script, data = {}, options = { timeOut: 30000 }) {
-  const fetchId = uuidv1();
+  const fetchId = uuid.v4();
   __FETCH_RESULTS__[fetchId] = "started";
 
   const Config = getConfigs();
@@ -417,7 +426,9 @@ function fmFetch(script, data = {}, options = { timeOut: 30000 }) {
  *
  * @param {string} script the name of the script to call
  * @param {Object} data the data to pass
- * @param {Object} options
+ * @param {Object} [options]
+ * @param {Object} [options.Meta] this object is passed to the FileMaker Script in a Meta property
+ * @param {string} [options.Meta.AddonUUID] this is used by the FileMaker Script to help target the correct Web Veiwer to call back to
  * @param {String} [options.eventType=null] an optional top level key to specific different types of events
  */
 
@@ -427,6 +438,9 @@ function fmCallScript(script, data = {}, options = {}) {
     Data: data,
     Meta: { Config, AddonUUID }
   };
+  if (options.Meta) {
+    param.Meta = options.Meta;
+  }
   if (options.eventType) {
     param.Meta.EventType = options.eventType;
   }
@@ -439,7 +453,7 @@ function fmCallScript(script, data = {}, options = {}) {
  * or loaded via function call
  */
 function getInitialProps() {
-  return window.__initialProps__;
+  return window.__initialProps__ || {};
 }
 
 /**
@@ -456,6 +470,7 @@ function getAddonUUID() {
  */
 const getConfigs = () => {
   const props = getInitialProps();
+
   return props.Config;
 };
 /**
